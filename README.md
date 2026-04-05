@@ -64,4 +64,4 @@ jupyter notebook notebooks/saas_dashboard.ipynb
 ```
 
 ## Live Site
-feliciachen01.github.io/saas-revenue-analysis
+https://feliciachen01.github.io/saas-revenue-analysis/
