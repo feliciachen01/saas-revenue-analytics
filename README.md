@@ -1,4 +1,4 @@
-# SaaS Revenue Analytics
+# SaaS Revenue Analysis
 
 End-to-end SaaS analytics portfolio project using a synthetic subscription dataset, SQL-based metric modeling, and interactive visual analytics.
 
