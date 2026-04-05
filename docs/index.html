@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaaS Revenue Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0f0f0f;
+    --gray-900: #1a1a1a;
+    --gray-600: #6b6b6b;
+    --gray-300: #d4d4d4;
+    --gray-100: #f5f5f5;
+    --white: #ffffff;
+    --accent: #1a1a1a;
+    --red: #c0392b;
+    --green: #27ae60;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    font-weight: 300;
+    color: var(--black);
+    background: var(--white);
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gray-300);
+    z-index: 100;
+    padding: 0 2rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gray-600);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--gray-600);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--black); }
+
+  .container {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .container-wide {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  section { padding: 5rem 0; }
+
+  .hero {
+    padding: 10rem 0 6rem;
+    border-bottom: 1px solid var(--gray-300);
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--gray-600);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+  }
+
+  .meta-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--black);
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.5rem;
+  }
+
+  p { margin-bottom: 1rem; color: var(--gray-900); }
+  p:last-child { margin-bottom: 0; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--gray-300);
+    margin: 0;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0;
+    border: 1px solid var(--gray-300);
+    margin: 2.5rem 0;
+  }
+
+  .stat-cell {
+    padding: 1.5rem;
+    border-right: 1px solid var(--gray-300);
+  }
+
+  .stat-cell:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    color: var(--black);
+  }
+
+  .stat-desc {
+    font-size: 12px;
+    color: var(--gray-600);
+    line-height: 1.4;
+  }
+
+  .chart-frame {
+    border: 1px solid var(--gray-300);
+    margin: 2rem 0;
+    overflow: hidden;
+  }
+
+  .chart-frame iframe {
+    width: 100%;
+    height: 480px;
+    border: none;
+    display: block;
+  }
+
+  .chart-caption {
+    padding: 0.875rem 1rem;
+    border-top: 1px solid var(--gray-300);
+    font-size: 13px;
+    color: var(--gray-600);
+    background: var(--gray-100);
+  }
+
+  .chart-placeholder {
+    width: 100%;
+    height: 420px;
+    background: var(--gray-100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .placeholder-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gray-600);
+    letter-spacing: 0.05em;
+  }
+
+  .placeholder-path {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-300);
+  }
+
+  .callout {
+    border-left: 3px solid var(--black);
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+    background: var(--gray-100);
+  }
+
+  .callout-alert {
+    border-left-color: var(--red);
+    background: #fdf5f5;
+  }
+
+  .callout p { font-size: 15px; }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 14px;
+  }
+
+  .comparison-table th {
+    text-align: left;
+    padding: 0.6rem 1rem;
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    border-bottom: 1px solid var(--gray-300);
+    font-weight: 400;
+  }
+
+  .comparison-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-900);
+  }
+
+  .comparison-table tr:last-child td { border-bottom: none; }
+
+  .comparison-table .highlight-row td {
+    color: var(--red);
+    font-weight: 500;
+  }
+
+  .comparison-table .good { color: var(--green); }
+  .comparison-table .bad { color: var(--red); }
+
+  .finding-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--gray-300);
+    border: 1px solid var(--gray-300);
+    margin: 2rem 0;
+  }
+
+  .finding-cell {
+    background: var(--white);
+    padding: 1.5rem;
+  }
+
+  .finding-cell h3 { font-size: 13px; color: var(--gray-600); font-weight: 400; margin-bottom: 0.75rem; }
+
+  .finding-num {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .finding-num.bad { color: var(--red); }
+  .finding-num.good { color: var(--green); }
+
+  .finding-sub { font-size: 12px; color: var(--gray-600); }
+
+  .rec-list { list-style: none; margin: 1.5rem 0; }
+
+  .rec-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--gray-100);
+    align-items: flex-start;
+  }
+
+  .rec-item:last-child { border-bottom: none; }
+
+  .rec-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-600);
+    min-width: 24px;
+    padding-top: 3px;
+  }
+
+  .rec-text h3 { margin-bottom: 0.25rem; }
+  .rec-text p { font-size: 14px; color: var(--gray-600); margin: 0; }
+
+  .footer {
+    padding: 3rem 0;
+    border-top: 1px solid var(--gray-300);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-600);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--gray-600);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--black); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid var(--black);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--sans);
+    text-decoration: none;
+    color: var(--black);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn:hover { background: var(--black); color: var(--white); }
+
+  .btn-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    background: var(--gray-100);
+    padding: 0.1em 0.4em;
+    color: var(--gray-900);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    .finding-block { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-meta { gap: 1.25rem; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">saas-revenue-analysis</a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#mrr">MRR</a></li>
+    <li><a href="#cohorts">Cohorts</a></li>
+    <li><a href="#anomaly">Anomaly</a></li>
+    <li><a href="#ltv">LTV/CAC</a></li>
+    <li><a href="#findings">Findings</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <section class="hero" id="top">
+    <p class="hero-label">Portfolio Project — SaaS Revenue Analysis</p>
+    <p>End-to-end revenue analysis across 10,000 customers and 36 months.</p>
+    <p>MRR modeling, cohort retention, and channel segmentation to surface what blended reporting misses.<p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Customers</span>
+        <span class="meta-value">10,000</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Time range</span>
+        <span class="meta-value">36 months</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Stack</span>
+        <span class="meta-value">Python · SQLite · Plotly Dash</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Schema</span>
+        <span class="meta-value">Star · 4 tables</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a class="btn" href="https://github.com/feliciachen01/saas-revenue-analysis" target="_blank">View on GitHub</a>
+      <a class="btn" href="#anomaly">Skip to the finding</a>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="problem" class="fade-in">
+    <span class="section-label">01 — the problem</span>
+    <h2>A SaaS business three years in, approaching a plateau.</h2>
+    <p>Leadership needs a clearer view of 3 things:</p>
+    <div class="callout">
+      <p>Whether the revenue base healthy, which customer cohorts are retaining well, and whether the right customers are being acquired by channel.</p>
+    </div>
+    <p>Since top-level metrics don't answer these questions reliably, this analysis builds the segmented view that does.</p>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-num">10K</div>
+        <div class="stat-desc">Synthetic customers across 6 acquisition channels</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">$623K</div>
+        <div class="stat-desc">Peak MRR reached at month 24</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">35</div>
+        <div class="stat-desc">Cohorts tracked across 36 months</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">4</div>
+        <div class="stat-desc">Tables in the star schema</div>
+      </div>
+    </div>
+
+    <p>The dataset is synthetic but realistic: logistic growth curve peaking at month 11, plan migrations (Starter → Growth → Enterprise), failed payments, reactivations, and one deliberately seeded anomaly designed to be invisible at the top level.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section id="mrr" class="fade-in">
+    <span class="section-label">02 — mrr movement</span>
+    <h2>Revenue grew fast, then hit a plateau.</h2>
+    <p>Each month's MRR movement is classified into five buckets: New, Expansion, Contraction, Churn, or Reactivation. The waterfall helps to show the composition of growth, and not just the net number.</p>
+
+    <div class="chart-frame">
+      <iframe src="mrr_waterfall.html" style="width:100%; height:480px; border:none;"></iframe>
+      <div class="chart-caption">Monthly MRR movement Jan 2023 – Dec 2025. Positive bars: New + Expansion + Reactivation. Negative bars: Contraction + Churn. Line: cumulative ending MRR.</div>
+    </div>
+
+    <p>The S-curve is clearly shown from the rapid growth through Year 1, expansion MRR compounding in Year 2, then net new MRR compressing in Year 3 as churn scales with the base and acquisition slows. By late 2025, the business has shifted into retention.</p>
+
+    <div class="callout">
+      <p>Every percentage point of churn costs more in Year 3 than it did in Year 1. The math changes when the base is large.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="cohorts" class="fade-in">
+    <span class="section-label">03 — cohort retention</span>
+    <h2>Overview</h2>
+    <p>Cohorts are defined by month of first subscription. For each cohort, we track what percentage of original MRR is still active at each subsequent month.</p>
+
+    <div class="chart-frame">
+      <iframe src="cohort_retention.html" style="width:100%; height:480px; border:none;"></iframe>
+      <div class="chart-caption">MRR retention heatmap. Each row = signup cohort. Each column = months since signup. Green = high retention, red = low.</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-num">101.5%</div>
+        <div class="stat-desc">Avg retention at M1 — net expansion outpaces early churn</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">81.2%</div>
+        <div class="stat-desc">Avg retention at M12</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">71.6%</div>
+        <div class="stat-desc">Avg retention at M24</div>
+      </div>
+    </div>
+
+    <p>Month 1 retention averages 101.5% because expansion revenue from early upgrades outpaces logo churn. After that, the curve decays consistently with no cohort significantly outperforming the average. By M24, average retention sits at 71.6%. The narrow P25-P75 band means cohort behavior is predictable, which makes LTV modelable. It also means the average seems like a reasonable estimate for most segments.</p>
+
+    <div class="chart-frame">
+    <iframe src="cohort_retention_curve.html" style="width:100%; height:480px; border:none;"></iframe>
+      <div class="chart-caption">Average MRR retention with P25–P75 band. Truncated at M25 (minimum 10 cohorts required).</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="anomaly" class="fade-in">
+    <span class="section-label">04 — the anomaly</span>
+    <h2>Drilling down</h2>
+
+    <p>Channel retention at M12 ranges from 66% to 74% across all 6 acquisition channels. partner_referral sits at 66.3%, which is within the normal range. Nothing stands out here.</p>
+
+    <div class="chart-frame">
+      <iframe src="cohort_retention_by_channel.html" style="width:100%; height:480px; border:none;"></iframe>
+      <div class="chart-caption">Logo retention by channel, all plan tiers. partner_referral sits at 66.3% at M12 — within the normal range of 66–74%.</div>
+    </div>
+
+    <p>Now filtering to Enterprise only.</p>
+
+    <div class="chart-frame">
+      <iframe src="cohort_retention_by_channel_enterprise.html" style="width:100%; height:480px; border:none;"></iframe>
+      <div class="chart-caption">MRR retention by channel, Enterprise plan only. partner_referral at 58.6% vs 75–83% for every other channel at M12.</div>
+    </div>
+
+    <div class="callout callout-alert">
+      <p>A 17–24 percentage point gap.</p>
+    </div>
+
+    <p>Why is it invisible at the top level? Enterprise is only 13% of signups, but it's 48% of MRR. The Starter and Growth tier customers from partner_referral churn at normal rates, and they outnumber Enterprise customers by volume. Therefore, the top-level view averages it away.</p>
+
+    <div class="finding-block">
+      <div class="finding-cell">
+        <h3>partner_referral Enterprise churn</h3>
+        <div class="finding-num bad">5.4%</div>
+        <div class="finding-sub">per month</div>
+      </div>
+      <div class="finding-cell">
+        <h3>all other channels Enterprise churn</h3>
+        <div class="finding-num good">1.87%</div>
+        <div class="finding-sub">per month — 3× lower</div>
+      </div>
+      <div class="finding-cell">
+        <h3>partner_referral M12 retention</h3>
+        <div class="finding-num bad">58.6%</div>
+        <div class="finding-sub">Enterprise MRR retained</div>
+      </div>
+      <div class="finding-cell">
+        <h3>other channels M12 retention</h3>
+        <div class="finding-num good">75–83%</div>
+        <div class="finding-sub">Enterprise MRR retained</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="ltv" class="fade-in">
+    <span class="section-label">05 — ltv / cac</span>
+    <h2>The low CAC is hiding the problem, not solving it.</h2>
+    <p>LTV is modeled as average initial MRR × (1 / monthly churn rate), segmented by channel and plan tier. CAC is assumed from industry-representative benchmarks by channel.</p>
+
+    <div class="chart-frame">
+      <iframe src="ltv_cac_grouped.html" style="width:100%; height:480px; border:none;"></iframe>
+      <div class="chart-caption">LTV grouped by acquisition channel and plan tier. Dashed line = average Enterprise LTV across non-partner_referral channels.</div>
+    </div>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>partner_referral Enterprise</th>
+          <th>Other channels Enterprise avg</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row">
+          <td>Monthly churn</td>
+          <td class="bad">6.05%</td>
+          <td class="good">1.87%</td>
+        </tr>
+        <tr>
+          <td>Avg customer lifetime</td>
+          <td class="bad">16.5 months</td>
+          <td class="good">52.0 months</td>
+        </tr>
+        <tr>
+          <td>LTV</td>
+          <td class="bad">$4,654</td>
+          <td class="good">$14,567</td>
+        </tr>
+        <tr>
+          <td>CAC</td>
+          <td>$95</td>
+          <td>$60–$340</td>
+        </tr>
+        <tr>
+          <td>LTV:CAC ratio</td>
+          <td>49x <em style="font-size:12px; color: var(--gray-600)">(looks healthy)</em></td>
+          <td>varies</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>partner_referral has the lowest CAC at $95 and a blended LTV:CAC of 49x, which looks strong. At the Enterprise tier specifically, monthly churn of 6.05% compresses average customer lifetime to 16.5 months versus 52 months for other channels. LTV comes out to $4,654 compared to $14,567 for other Enterprise segments.</p>
+    <p>The ratio is misleading due to the low CAC.</p>
+  </section>
+
+  <hr class="divider">
+
+  <section id="findings" class="fade-in">
+    <span class="section-label">06 — so what</span>
+    <h2>3 things this analysis supports:</h2>
+
+    <ul class="rec-list">
+      <li class="rec-item">
+        <span class="rec-num">01</span>
+        <div class="rec-text">
+          <h3>Investigate partner_referral Enterprise onboarding</h3>
+          <p>The churn spike is channel- and tier-specific. That pattern points to a fit or expectation problem, not a product problem. The fix is qualitative: interview churned Enterprise customers from this channel before spending another dollar scaling it.</p>
+        </div>
+      </li>
+      <li class="rec-item">
+        <span class="rec-num">02</span>
+        <div class="rec-text">
+          <h3>Segment retention reporting by plan tier by default</h3>
+          <p>Blended channel retention is structurally misleading when plan mix varies by channel. The default board view should always show Enterprise retention separately. One chart change, significant difference in what gets caught early.</p>
+        </div>
+      </li>
+      <li class="rec-item">
+        <span class="rec-num">03</span>
+        <div class="rec-text">
+          <h3>Set a minimum lifetime threshold for channel investment</h3>
+          <p>LTV:CAC ratio alone is insufficient when churn varies 3× by segment. Require a minimum expected customer lifetime (e.g. 24 months) before scaling any channel at the Enterprise tier. CAC efficiency means nothing if the customer doesn't stay.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="callout" style="margin-top: 2.5rem;">
+      <p>A note on methodology: this anomaly was seeded deliberately to demonstrate the analytical approach. The same methodology applied to real data would surface equivalent patterns that aggregated reporting typically misses.</p>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn" href="https://github.com/feliciachen01/saas-revenue-analysis" target="_blank">View code on GitHub</a>
+      <a class="btn" href="notebooks/saas_dashboard.ipynb" target="_blank">View notebook</a>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-note">Built with Python · SQLite · Plotly Dash · 2025</span>
+      <div class="footer-links">
+        <a href="https://github.com/feliciachen01/saas-revenue-analysis" target="_blank">GitHub</a>
+        <a href="#top">Back to top</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
